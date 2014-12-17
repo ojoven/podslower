@@ -1,4 +1,7 @@
 <?php
-require_once('settings.php');
+$podcastRssUrl = "http://radiofrance-podcast.net/podcast09/rss_10078.xml";
+$xmlPodcast = file_get_contents($podcastRssUrl);
+$xml = new SimpleXMLElement($xmlPodcast);
 
-echo "Nothing yet, man";
+// Retrieve episodes' mp3s from the XML
+// Foreach episode run sox
