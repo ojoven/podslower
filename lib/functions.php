@@ -1,5 +1,11 @@
 <?php
 
+// Log
+function mylog($message) {
+	echo $message.PHP_EOL;
+}
+
+// Image Get Type
 function getMimeInfoFromImage($image) {
 	$finfo = finfo_open(FILEINFO_MIME_TYPE);
 	$filetype = finfo_file($finfo, $image);

@@ -8,16 +8,24 @@ require_once 'lib/vendor/MysqliDb/MysqliDb.php';
 require_once 'lib/vendor/SimpleImage.php';
 require_once 'lib/vendor/amazon-s3-php-class/S3.php';
 
+// Let's measure script time
+$start = microtime(true);
+
 // Connect to DB
 $db = new MysqliDb (DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
 
+// Start Amazon
+$s3 = new S3(AWS_KEY, AWS_SECRET);
+
 // Get All Podcasts
+mylog("Getting podcasts");
 $podcasts = $db->get('podcasts');
 
 // Retrieve the episodes for the podcasts
 foreach ($podcasts as $podcastDb) {
 	
 	$podcastRssUrl = $podcastDb['url'];
+	mylog("Getting podcast info for " . $podcastDb['title']);
 	$xmlPodcast = file_get_contents($podcastRssUrl);
 	$podcast = new SimpleXMLElement($xmlPodcast);
 	$podcast = json_decode(json_encode($podcast),true); // Array
@@ -32,6 +40,8 @@ foreach ($podcasts as $podcastDb) {
 
 		if (!$podcastDb['parsed']) {
 			
+			mylog("The podcast is not parsed. Let's save the image.");
+			
 			// Copy in the filesystem
 			$tmpImage = TMP_PATH . '/' . $podcastSlug;
 			copy($podcastImage, $tmpImage);
@@ -45,7 +55,6 @@ foreach ($podcasts as $podcastDb) {
 			
 			// Upload to Amazon S3
 			$uploadName = $podcastSlug.$mime['extension'];
-			$s3 = new S3(AWS_KEY, AWS_SECRET);
 			$s3->putObject(S3::inputFile($tmpImage, false), AWS_S3_BUCKET, $uploadName, S3::ACL_PUBLIC_READ,array(), array('Content-Type' => $mime['contentType']));
 			
 		}
@@ -54,12 +63,42 @@ foreach ($podcasts as $podcastDb) {
 		$episodes = array_slice($episodes,0,MAX_NUM_EPISODES);
 		
 		foreach ($episodes as $episode) {
-		
-			$mp3 = $episode['enclosure']['@attributes'];
-			$mp3['title'] = $episode['title'];
-			$mp3['slug'] = url_slug($episode['title']);
-			$mp3['date'] = $episode['pubDate'];
-		
+			
+			$mp3Url = $episode['enclosure']['@attributes']['url'];
+			$title = $episode['title'];
+			$slug = url_slug($title);
+			$date = $episode['pubDate'];
+			
+			// Let's check if the episode is already parsed
+			$db->where('slug',$slug);
+			$exists = $db->getOne('episodes');
+			
+			// If not exists, we sox it and save it to DB
+			// Get mp3
+			if (!$exists) {
+				mylog($title . " is not parsed yet, let's parse it.");
+				
+				$tmpMp3 = TMP_PATH . '/' . $slug . '.mp3';
+				
+				mylog("Retrieving mp3 file...");
+				copy($mp3Url, $tmpMp3);
+					
+				// Once copied, we create the slowed versions
+				//$versions = array(70,80,90,100,120);
+				$versions = array(70);
+				foreach ($versions as $version) {
+					
+					// Run sox command
+					mylog("Generating version: " . $version . ". Please wait...");
+					$tmpMp3Slowed = TMP_PATH . '/' . $slug . "_" . $version . '.mp3';
+					exec('sox ' . $tmpMp3 . ' ' . $tmpMp3Slowed . ' tempo 0.' . $version);
+					
+					mylog("Uploading to Amazon S3: " . $version . ". Please wait...");
+					$uploadName = $podcastSlug. '/' . $slug . '.mp3';
+					$s3->putObject(S3::inputFile($tmpMp3Slowed, false), AWS_S3_BUCKET, $uploadName, S3::ACL_PUBLIC_READ,array(), array('Content-Type' => 'audio/mpeg'));
+				}
+				
+			}
 		}
 		
 	}
@@ -67,7 +106,6 @@ foreach ($podcasts as $podcastDb) {
 	
 }
 
-
-
-
-// Foreach episode run sox
+// Let's log the final time
+$time = date('i:s',microtime(true) - $start);
+mylog($time);
