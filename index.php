@@ -7,10 +7,6 @@ require_once 'lib/functions.php';
 require_once 'lib/vendor/SimpleImage.php';
 require_once 'lib/vendor/amazon-s3-php-class/S3.php';
 
-echo APPLICATION_PATH;
-
-return;
-
 // Connect to DB
 $db = new MysqliDb (DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
 
@@ -32,6 +28,12 @@ foreach ($podcasts as $podcast) {
 	if (!empty($episodes)) {
 
 		// If the podcast is not parsed yet, we'll save its image
+		copy($image, $dest);
+		$imageGiftThumbnail = new SimpleImage($target);
+		$imageVersion = $imageName."_".self::GIFT_IMAGE_THUMBNAIL.self::EXT_JPG;
+		$imagePath = $targetFolder.$imageVersion;
+		$imageGiftThumbnail->fit_to_width(300)->save($imagePath);
+		AmazonS3Functions::uploadToS3($imagePath,$imageVersion,$bucket);
 		
 		
 		// Max num of episodes
