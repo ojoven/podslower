@@ -1,4 +1,25 @@
 <?php
+
+function getMimeInfoFromImage($image) {
+	$finfo = finfo_open(FILEINFO_MIME_TYPE);
+	$filetype = finfo_file($finfo, $image);
+	switch ($filetype) {
+		case 'image/gif':
+			$mime['extension'] = '.gif';
+			break;
+		case 'image/png':
+			$mime['extension'] = '.png';
+			break;
+		case 'image/jpeg':
+		default:
+			$mime['extension'] = '.jpg';
+			break;							
+	}
+	
+	$mime['contentType'] = $filetype;
+	return $mime;
+}
+
 /**
  * Create a web friendly URL slug from a string.
  *

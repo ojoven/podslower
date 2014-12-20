@@ -4,6 +4,7 @@ require_once 'config/settings.php';
 
 // Lib
 require_once 'lib/functions.php';
+require_once 'lib/vendor/MysqliDb/MysqliDb.php';
 require_once 'lib/vendor/SimpleImage.php';
 require_once 'lib/vendor/amazon-s3-php-class/S3.php';
 
@@ -14,27 +15,40 @@ $db = new MysqliDb (DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
 $podcasts = $db->get('podcasts');
 
 // Retrieve the episodes for the podcasts
-foreach ($podcasts as $podcast) {
+foreach ($podcasts as $podcastDb) {
 	
-	$podcastRssUrl = $podcast['url'];
+	$podcastRssUrl = $podcastDb['url'];
 	$xmlPodcast = file_get_contents($podcastRssUrl);
 	$podcast = new SimpleXMLElement($xmlPodcast);
+	$podcast = json_decode(json_encode($podcast),true); // Array
 	
 	// Retrieve podcast and episodes info
-	$title = $podcast['channel']['title'];
-	$image = $podcast['channel']['image']['url'];
+	$podcastTitle = $podcast['channel']['title'];
+	$podcastSlug = url_slug($podcastTitle);
+	$podcastImage = $podcast['channel']['image']['url'];
 	$episodes = $podcast['channel']['item'];
 	
 	if (!empty($episodes)) {
 
-		// If the podcast is not parsed yet, we'll save its image
-		copy($image, $dest);
-		$imageGiftThumbnail = new SimpleImage($target);
-		$imageVersion = $imageName."_".self::GIFT_IMAGE_THUMBNAIL.self::EXT_JPG;
-		$imagePath = $targetFolder.$imageVersion;
-		$imageGiftThumbnail->fit_to_width(300)->save($imagePath);
-		AmazonS3Functions::uploadToS3($imagePath,$imageVersion,$bucket);
-		
+		if (!$podcastDb['parsed']) {
+			
+			// Copy in the filesystem
+			$tmpImage = TMP_PATH . '/' . $podcastSlug;
+			copy($podcastImage, $tmpImage);
+			
+			// Get the type
+			$mime = getMimeInfoFromImage($tmpImage);
+			
+			// Create Thumbnail
+			$imageThumbnail = new SimpleImage($tmpImage);
+			$imageThumbnail->adaptive_resize(400,400)->save($tmpImage);
+			
+			// Upload to Amazon S3
+			$uploadName = $podcastSlug.$mime['extension'];
+			$s3 = new S3(AWS_KEY, AWS_SECRET);
+			$s3->putObject(S3::inputFile($tmpImage, false), AWS_S3_BUCKET, $uploadName, S3::ACL_PUBLIC_READ,array(), array('Content-Type' => $mime['contentType']));
+			
+		}
 		
 		// Max num of episodes
 		$episodes = array_slice($episodes,0,MAX_NUM_EPISODES);
