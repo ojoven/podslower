@@ -1,4 +1,4 @@
-.tmp/*
+.tmp
 .settings
 .buildpath
 .project
