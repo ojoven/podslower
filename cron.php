@@ -72,7 +72,7 @@ foreach ($podcasts as $podcastDb) {
 			$urlMp3 = $episode['enclosure']['@attributes']['url'];
 			$title = $episode['title'];
 			$slug = url_slug($title);
-			$duration = $episode['enclosure']['@attributes']['length'];
+			$duration = (isset($episode['enclosure']['@attributes']['length'])) ? $episode['enclosure']['@attributes']['length'] : 0;
 			$datePodcast = date('Y-m-d H:i:s',strtotime($episode['pubDate']));
 			$now = date("Y-m-d H:i:s");
 			
@@ -83,29 +83,38 @@ foreach ($podcasts as $podcastDb) {
 			// If not exists, we sox it and save it to DB
 			// Get mp3
 			if (!$exists) {
+				
 				mylog($title . " is not parsed yet, let's parse it.");
 				
 				$tmpMp3 = TMP_PATH . '/' . $slug . '.mp3';
 				
 				mylog("Retrieving mp3 file...");
-				//copy($urlMp3, $tmpMp3);
+				copy($urlMp3, $tmpMp3);
 					
 				// Once copied, we create the slowed versions
-				//$versions = array(70,80,90,100,120);
-				$versions = array(70);
+				$versions = array(70,80,90,120);
 				foreach ($versions as $version) {
 					
-					// Run sox command
-					mylog("Generating version: " . $version . ". Please wait...");
-					$tmpMp3Slowed = TMP_PATH . '/' . $slug . "_" . $version . '.mp3';
-					//exec('sox ' . $tmpMp3 . ' ' . $tmpMp3Slowed . ' tempo 0.' . $version);
+					try {
+						
+						// Run sox command
+						mylog("Generating version: " . $version . ". Please wait...");
+						$tmpMp3Slowed = TMP_PATH . '/' . $slug . "_" . $version . '.mp3';
+						exec('sox ' . $tmpMp3 . ' ' . $tmpMp3Slowed . ' tempo ' . $version/100);
+							
+						mylog("Uploading to Amazon S3: " . $version . ". Please wait...");
+						$uploadName = $podcastSlug. '/' . $slug . "_" . $version . '.mp3';
+						$s3->putObject(S3::inputFile($tmpMp3Slowed, false), AWS_S3_BUCKET, $uploadName, S3::ACL_PUBLIC_READ,array(), array('Content-Type' => 'audio/mpeg'));
+							
+						// Delete the tmp mp3 version
+						unlink($tmpMp3Slowed);
+						
+					} catch (Exception $e) {
+						
+						//file_put_contents($filename, $data);
+						
+					}
 					
-					mylog("Uploading to Amazon S3: " . $version . ". Please wait...");
-					$uploadName = $podcastSlug. '/' . $slug . '.mp3';
-					//$s3->putObject(S3::inputFile($tmpMp3Slowed, false), AWS_S3_BUCKET, $uploadName, S3::ACL_PUBLIC_READ,array(), array('Content-Type' => 'audio/mpeg'));
-					
-					// Delete the tmp mp3 version
-					//unlink($tmpMp3Slowed);
 				}
 				
 				// Save info in DB
@@ -120,7 +129,6 @@ foreach ($podcasts as $podcastDb) {
 					'dateAdded' => $now
 				);
 				$id = $db->insert('episodes', $data);
-				
 				
 			}
 		}
