@@ -5,16 +5,14 @@ Check it at:
 http://podslower.ojoven.es
 
 Credits
----------
+===========
 * This project has been done by [@ojoven](http://twitter.com/ojoven). You can find me, too, at http://ojoven.es.
 * [Amazon S3 PHP class](http://undesigned.org.za/2007/10/22/amazon-s3-php-class) by Donovan Schönknecht is used. Thanks man!
 * [MysqliDb Class](https://github.com/joshcam/PHP-MySQLi-Database-Class) is used, too.
 * Of course, this couldn't have been done without [SOX](http://sox.sourceforge.net/) and all those who contribute to it.
 
-ROADMAP
----------
-* Add more french / english podcasts
-* Add new languages: German, Japanese, Chinese, Russian... Do you want any podcast to be added? Please [contact me](http://twitter.com/ojoven)
-* Handle the versions via DB, instead of having them hardcoded
-* Handle the errors when retrieving and treating the mp3s
-* If new podcasts / languages are added, optimize the UX to handle them
+TODO:
+* Create Database with French / German / English podcasts
+* Study Itunes API: https://itunes.apple.com/search?term=les+pieds+sur+terre
+* Retrieve MP3 from RSS feed: http://radiofrance-podcast.net/podcast09/rss_10078.xml
+* Study Dropbox API: https://www.dropbox.com/developers/core/sdks/php
