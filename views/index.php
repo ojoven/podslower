@@ -32,11 +32,11 @@ $languages = $db->get('languages');
 						<li>
 							<span class="episode-title"><?php echo $episode['title']; ?></span>
 							<ul class="links">
-								<li><a href="#">70%</a></li>
-								<li><a href="#">80%</a></li>
-								<li><a href="#">90%</a></li>
-								<li><a href="#">original</a></li>
-								<li><a href="#">120%</a></li>
+								<li><a target="_blank" href="http://podslower.s3.amazonaws.com/<?php echo $podcast['slug'] . "/" . $episode['slug'] . "_70.mp3"; ?>">70%</a></li>
+								<li><a target="_blank" href="http://podslower.s3.amazonaws.com/<?php echo $podcast['slug'] . "/" . $episode['slug'] . "_80.mp3"; ?>">80%</a></li>
+								<li><a target="_blank" href="http://podslower.s3.amazonaws.com/<?php echo $podcast['slug'] . "/" . $episode['slug'] . "_90.mp3"; ?>">90%</a></li>
+								<li><a target="_blank" href="<?php echo $episode['urlMp3']; ?>">original</a></li>
+								<li><a target="_blank" href="http://podslower.s3.amazonaws.com/<?php echo $podcast['slug'] . "/" . $episode['slug'] . "_120.mp3"; ?>">120%</a></li>
 							</ul>
 						</li>
 						<?php }?>
