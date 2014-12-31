@@ -25,9 +25,6 @@ require_once '../lib/vendor/MysqliDb/MysqliDb.php';
 		<!-- Optional theme -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-
 		<!-- Custom styles for this template -->
 		<link href="css/style.css" rel="stylesheet">
 
@@ -55,7 +52,19 @@ require_once '../lib/vendor/MysqliDb/MysqliDb.php';
 			<div class="header">
 				<nav>
 					<ul class="nav nav-pills pull-right">
-						<li role="presentation"<?php if ($page=="home") {?> class="active"<?php }?>><a href="/">Home</a></li>
+						<li role="presentation">
+							<select id="language-selector" onchange="languageSelectorChanged()">
+								<option value="">Language</option>
+								<?php
+								$db = new MysqliDb(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+								//$db->where('status',true);
+								$languages = $db->get('languages');
+								foreach ($languages as $language) {
+								?>
+								<option value="<?php echo $language['code'];?>"><?php echo $language['name']; ?></option>
+								<?php }?>
+							</select>
+						</li>
 						<li role="presentation"<?php if ($page=="about") {?> class="active"<?php }?>><a href="/about">About</a></li>
 					</ul>
 				</nav>

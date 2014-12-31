@@ -3,6 +3,7 @@
 <?php
 // Connect to DB
 $db = new MysqliDb(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+$db->where('status',true);
 $languages = $db->get('languages');
 ?>
 
@@ -14,12 +15,12 @@ $languages = $db->get('languages');
 		<?php foreach ($languages as $language) {?>
 
 			<?php
-			$db->where('lang',$language['code']);
+			$db->where('lang',$language['code'])->where('parsed',true);
 			$podcasts = $db->get('podcasts');
 			?>
 
 			<div class="row marketing language">
-				<h2 class="lang-title"><?php echo $language['name']; ?></h2>
+				<h2 id="<?php echo $language['code'];?>" class="lang-title"><?php echo $language['name']; ?></h2>
 				<?php foreach ($podcasts as $podcast) {?>
 				<div class="col-lg-6 podcast">
 					<h4 class="podcast-title"><?php echo $podcast['title']; ?></h4>
@@ -28,6 +29,8 @@ $languages = $db->get('languages');
 						<?php
 						$db->where('idPodcast',$podcast['id']);
 						$episodes = $db->get('episodes');
+
+						$episodes = (!empty($episodes)) ? array_slice($episodes,0,MAX_NUM_EPISODES) : array();
 						foreach ($episodes as $episode) { ?>
 						<li>
 							<span class="episode-title"><?php echo $episode['title']; ?></span>
