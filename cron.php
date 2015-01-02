@@ -19,6 +19,7 @@ $s3 = new S3(AWS_KEY, AWS_SECRET);
 
 // Get All Podcasts
 mylog("Getting podcasts");
+$db->where('lang','es');
 $podcasts = $db->get('podcasts');
 
 // Retrieve the episodes for the podcasts
@@ -38,13 +39,11 @@ foreach ($podcasts as $podcastDb) {
 	// Podcast image
 	if (isset($podcast['channel']['image']['url'])) {
 		$podcastImage = $podcast['channel']['image']['url'];
-	} elseif (isset($podcast['channel']['itunes:image']['href'])) {
+	} elseif (isset($podcastXml->channel->children("http://www.itunes.com/dtds/podcast-1.0.dtd")->image->attributes()['href'])) {
 		$podcastImage = $podcastXml->channel->children("http://www.itunes.com/dtds/podcast-1.0.dtd")->image->attributes()['href'];
 	} else {
 		$podcastImage = false;
 	}
-
-	print_r($podcastImage);
 
 	if (!empty($episodes)) {
 

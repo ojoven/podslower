@@ -42,7 +42,7 @@ function languageSelectorChanged() {
 
 	var languageBlock = document.getElementById(languageCode);
 	console.log(languageBlock);
-	scrollTo(document.documentElement,languageBlock.offsetTop,200);
+	$("html, body").animate({scrollTop:languageBlock.offsetTop-20}, '500');
 
 }
 

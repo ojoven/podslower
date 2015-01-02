@@ -10,7 +10,7 @@
 <p>So easy, Podslower is a site where you can find slowed down podcasts, so you can listen to real podcasts (not the typical specialized ones for learning languages) but slowed down so they're easier to handle.</p>
 
 <h2>Can I download them?</h2>
-<p>For sure, you can right-click - save link as... to download the mp3s</p>
+<p>Nope, we use the HTML5 audio tag to slow down the podcasts in real time, so no downloadable files are generated.</p>
 
 <h2>What about the 120% version</h2>
 <p>Apart from the slowed down versions and the original (100% speed), there's this accelerated one. Just as the athlete that puts weight on his ankles when training, it seems a good idea to practice with speeded up audios that would train your hearing so you get more, easier, when listening to normal speed audios.
@@ -19,5 +19,5 @@
 <p>Yes, of course. Please contact me at <a target="_blank" href="http://twitter.com/ojoven">my Twitter</a> and send me your suggestions. They'll be very welcome.</p>
 
 <h2>Can I slow down any other audios (songs / personal ones) with PodSlower?</h2>
-<p>Nope, I'm afraid that we only slow down some specific podcasts, but you can download some audio apps that can help you, too. Just search on Google.</p>
+<p>Nope yet, probably will add it soon.</p>
 <?php require 'layout/footer.php';?>

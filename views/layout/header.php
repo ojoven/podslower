@@ -68,5 +68,5 @@ require_once '../lib/vendor/MysqliDb/MysqliDb.php';
 						<li role="presentation"<?php if ($page=="about") {?> class="active"<?php }?>><a href="/about">About</a></li>
 					</ul>
 				</nav>
-				<h3 class="text-muted">Podslower</h3>
+				<h3 class="text-muted"><a href="/">Podslower</a></h3>
 			</div>
