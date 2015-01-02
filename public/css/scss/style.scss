@@ -154,3 +154,19 @@ body {
 		}
 	}
 }
+
+/** MEDIA QUERIES **/
+@media screen and (max-width:640px) {
+
+	.episodes .links {
+
+		width:120%;
+		margin-left:-10%;
+		padding:0;
+
+		li:after {
+			content:"";
+			padding:0;
+		}
+	}
+}
