@@ -19,7 +19,6 @@ $s3 = new S3(AWS_KEY, AWS_SECRET);
 
 // Get All Podcasts
 mylog("Getting podcasts");
-$db->where('lang','es');
 $podcasts = $db->get('podcasts');
 
 // Retrieve the episodes for the podcasts
