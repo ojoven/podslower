@@ -32,14 +32,14 @@ $languages = $db->get('languages');
 
 						$episodes = (!empty($episodes)) ? array_slice($episodes,0,MAX_NUM_EPISODES) : array();
 						foreach ($episodes as $episode) { ?>
-						<li>
+						<li class="episode" data-href="<?php echo $episode['urlMp3']; ?>">
 							<span class="episode-title"><?php echo $episode['title']; ?></span>
-							<ul class="links">
-								<li><a target="_blank" href="http://podslower.s3.amazonaws.com/<?php echo $podcast['slug'] . "/" . $episode['slug'] . "_70.mp3"; ?>">70%</a></li>
-								<li><a target="_blank" href="http://podslower.s3.amazonaws.com/<?php echo $podcast['slug'] . "/" . $episode['slug'] . "_80.mp3"; ?>">80%</a></li>
-								<li><a target="_blank" href="http://podslower.s3.amazonaws.com/<?php echo $podcast['slug'] . "/" . $episode['slug'] . "_90.mp3"; ?>">90%</a></li>
-								<li><a target="_blank" href="<?php echo $episode['urlMp3']; ?>">original</a></li>
-								<li><a target="_blank" href="http://podslower.s3.amazonaws.com/<?php echo $podcast['slug'] . "/" . $episode['slug'] . "_120.mp3"; ?>">120%</a></li>
+							<ul class="links btn-group">
+								<li><a class="btn btn-default btn-xs" data-speed="70" href="#">70%</a></li>
+								<li><a class="btn btn-success btn-xs" data-speed="80" href="#">80%</a></li>
+								<li><a class="btn btn-default btn-xs" data-speed="90" href="#">90%</a></li>
+								<li><a class="btn btn-default btn-xs" data-speed="100" href="#">original</a></li>
+								<li><a class="btn btn-warning btn-xs" data-speed="120" href="#">120%</a></li>
 							</ul>
 						</li>
 						<?php }?>

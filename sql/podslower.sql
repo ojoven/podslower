@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 29-12-2014 a las 19:42:25
+-- Tiempo de generación: 02-01-2015 a las 14:18:26
 -- Versión del servidor: 5.5.34
 -- Versión de PHP: 5.4.22
 
@@ -113,16 +113,20 @@ CREATE TABLE IF NOT EXISTS `languages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(2) COLLATE utf8_bin NOT NULL,
   `name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=6 ;
 
 --
 -- Volcado de datos para la tabla `languages`
 --
 
-INSERT INTO `languages` (`id`, `code`, `name`) VALUES
-(1, 'fr', 'Français'),
-(2, 'en', 'English');
+INSERT INTO `languages` (`id`, `code`, `name`, `status`) VALUES
+(1, 'fr', 'Français', 1),
+(2, 'en', 'English', 1),
+(3, 'de', 'Deutsch', 0),
+(4, 'jp', 'Japanese', 0),
+(5, 'es', 'Español', 0);
 
 -- --------------------------------------------------------
 
@@ -139,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `podcasts` (
   `parsed` tinyint(1) NOT NULL,
   `date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=21 ;
 
 --
 -- Volcado de datos para la tabla `podcasts`
@@ -151,7 +155,21 @@ INSERT INTO `podcasts` (`id`, `title`, `slug`, `url`, `lang`, `parsed`, `date`) 
 (3, 'FRANCE 24 - REPORTAGES', 'france-24-reportages', 'http://www.france24.com/static/podcast/fr/REPORTAGES/reportages-fr.xml', 'fr', 1, '2014-12-20 00:00:00'),
 (4, 'BBC World Service - Documentaries', 'documentaries', 'http://downloads.bbc.co.uk/podcasts/worldservice/docarchive/rss.xml', 'en', 1, '2014-12-20 00:00:00'),
 (5, 'BBC World Service - Global News', 'global-news', 'http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/rss.xml', 'en', 1, '2014-12-20 00:00:00'),
-(6, 'BBC World Service - BBC Business Daily', 'bbc-business-daily', 'http://downloads.bbc.co.uk/podcasts/worldservice/bizdaily/rss.xml', 'en', 1, '2014-12-20 00:00:00');
+(6, 'BBC World Service - BBC Business Daily', 'bbc-business-daily', 'http://downloads.bbc.co.uk/podcasts/worldservice/bizdaily/rss.xml', 'en', 1, '2014-12-20 00:00:00'),
+(7, 'WDR 5 Das philosophische Radio', 'wdr-5-das-philosophische-radio', 'http://www1.wdr.de/radio/podcasts/wdr5/dasphilosophischeradio100.podcast', 'de', 0, '2014-12-31 00:00:00'),
+(8, 'Der Presseclub im WDR 5-Radio zum Mitnehmen', 'der-presseclub-im-wdr-5-radio-zum-mitnehmen', 'http://podcast.wdr.de/radio/presseclubwdr5.xml', 'de', 0, '2014-12-31 00:00:00'),
+(9, 'Kinderradio im WDR 5-Radio zum Mitnehmen', 'kinderradio-im-wdr-5-radio-zum-mitnehmen', 'http://podcast.wdr.de/radio/baerenbude.xml', 'de', 0, '2014-12-31 00:00:00'),
+(10, 'Erlebte Geschichten im WDR 5 Radio zum Mitnehmen', 'erlebte-geschichten-im-wdr-5-radio-zum-mitnehmen', 'http://podcast.wdr.de/radio/erlebtegeschichten.xml', 'de', 0, '2014-12-31 00:00:00'),
+(11, 'Débat du jour', 'debat-du-jour', 'http://www.rfi.fr/emission/debat-jour/podcast', 'fr', 0, '2014-12-31 00:00:00'),
+(12, 'Product People', 'product-people', 'http://productpeople.tv/feed/podcast/', 'en', 0, '2014-12-31 00:00:00'),
+(13, 'Anna & Lueのひみつの小部屋（完全版）', 'anna-lue', 'http://lovefm.co.jp/podcasts/xml/133/24.xml', 'jp', 0, '2014-12-31 00:00:00'),
+(14, 'ヨーロッパ企画福岡支部ポッドキャスト', 'europe-planning-fukuoka-branch-podcasts', 'http://lovefm.co.jp/podcasts/xml/114/23.xml', 'jp', 0, '2014-12-31 00:00:00'),
+(15, 'Global Hearts', 'global-hearts', 'http://lovefm.co.jp/podcasts/xml/84/15.xml', 'jp', 0, '2014-12-31 00:00:00'),
+(16, 'Global Session ?', 'global-session', 'http://lovefm.co.jp/podcasts/xml/53/8.xml', 'jp', 0, '2014-12-31 00:00:00'),
+(17, 'La Ventana (Cadena SER)', 'la-ventana-cadena-ser', 'http://urotrosfiles.media.streamtheworld.com/otrosfiles/podcasts/324.xml', 'es', 0, '2014-12-31 00:00:00'),
+(18, 'Hoy por Hoy (Cadena SER)', 'hoy-por-hoy-cadena-ser', 'http://urotrosfiles.media.streamtheworld.com/otrosfiles/podcasts/222.xml', 'es', 0, '2014-12-31 00:00:00'),
+(19, 'Coordenadas (Radio 3)', 'coordenadas-radio-3', 'http://www.rtve.es/api/programas/58250/audios.rss', 'es', 0, '2014-12-31 00:00:00'),
+(20, 'Fallo de sistema (Radio 3)', 'fallo-de-sistema-radio-3', 'http://www.rtve.es/api/programas/46690/audios.rss', 'es', 0, '2014-12-31 00:00:00');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
