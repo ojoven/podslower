@@ -3,9 +3,18 @@
 <?php
 // Connect to DB
 $db = new MysqliDb(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+
+// Get Languages
 $db->where('status',true);
 $languages = $db->get('languages');
+
+// Get last episode's date
+$db->orderBy("id","desc");
+$lastEpisode = $db->getOne('episodes');
 ?>
+		<div class="secondary">
+			Last episode added: <?php echo ago(strtotime($lastEpisode['datePodcast'])); ?>
+		</div>
 
 		<div class="jumbotron">
 			<h1>Learn Languages<br>With Slowed Down Podcasts</h1>
@@ -23,7 +32,7 @@ $languages = $db->get('languages');
 				<h2 id="<?php echo $language['code'];?>" class="lang-title"><?php echo $language['name']; ?></h2>
 				<?php foreach ($podcasts as $podcast) {?>
 				<div class="col-lg-6 podcast">
-					<h4 class="podcast-title"><?php echo $podcast['title']; ?></h4>
+					<h4 class="podcast-title" title="<?php echo $podcast['title']; ?>"><?php echo $podcast['title']; ?></h4>
 					<img src="http://podslower.s3.amazonaws.com/<?php echo $podcast['slug']; ?>.jpg">
 					<ul class="episodes">
 						<?php
@@ -33,7 +42,10 @@ $languages = $db->get('languages');
 						$episodes = (!empty($episodes)) ? array_slice($episodes,0,MAX_NUM_EPISODES) : array();
 						foreach ($episodes as $episode) { ?>
 						<li class="episode" data-href="<?php echo $episode['urlMp3']; ?>">
-							<span class="episode-title"><?php echo $episode['title']; ?></span>
+							<span class="episode-title" title="<?php echo $episode['title']; ?>">
+								<?php echo $episode['title']; ?>
+							</span>
+							<span class="date"><?php echo ago(strtotime($episode['datePodcast'])); ?></span>
 							<ul class="links btn-group">
 								<li><a class="btn btn-default btn-xs" data-speed="70" href="#">70%</a></li>
 								<li><a class="btn btn-success btn-xs" data-speed="80" href="#">80%</a></li>
